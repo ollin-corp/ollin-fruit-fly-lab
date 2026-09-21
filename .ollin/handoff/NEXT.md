@@ -2,21 +2,39 @@
 
 M0 is accepted and closed.
 
-The next milestone is **M1 — Deterministic Connectome Acquisition**.
+M1 Proposal R01 has been superseded.
 
-M1 is currently **proposal-only**. Implementation is not authorized by M0 closure.
+Current proposal:
 
-The M1 proposal should begin with a single dataset (FAFB v783 is the default candidate) and must address:
+`.ollin/milestones/M1-PROPOSAL-R02.md`
 
-1. the current Codex static download index;
-2. selection of the minimum required data products;
-3. canonical source URLs and source metadata;
-4. a local ignored data root;
-5. SHA-256 for every accepted artifact;
-6. a deterministic manifest;
-7. offline re-validation of already downloaded artifacts;
-8. tiny synthetic fixtures for repository tests;
-9. explicit licensing/citation obligations;
-10. no neural simulation.
+Current draft work order:
 
-The proposal must preserve M0 law separating biological source data, model assumptions, and experimental results.
+`.ollin/work-orders/M1-WO001-DRAFT.md`
+
+Research census:
+
+`docs/research/M1-CODEX-DOWNLOAD-CENSUS.md`
+
+Proposal branch:
+
+`m1-deterministic-connectome-acquisition-r01`
+
+The branch name is retained to preserve Git/PR continuity; proposal authority inside the branch is R02.
+
+## R02 architectural direction
+
+- public FAFB v783 static files;
+- no Codex API;
+- no Codex token;
+- no CAVE token;
+- no interactive service dependency;
+- SHA-256 immutable local raw artifacts;
+- offline operation after acquisition;
+- unthresholded connectivity required.
+
+## Required owner decision
+
+Accept, amend, or reject M1 Proposal R02.
+
+Implementation remains prohibited until owner acceptance.
