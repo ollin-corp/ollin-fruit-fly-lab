@@ -14,7 +14,13 @@ Current accepted main SHA at M1 proposal start:
 
 Owner local M0 requalification: `PASS`
 
-M1 proposal: `R01_PREPARED_ON_PROPOSAL_BRANCH`
+M1 Proposal R01: `SUPERSEDED`
+
+M1 Proposal R02: `OWNER_REVIEW_PENDING`
+
+M1 R02 direction:
+
+`DIRECT_PUBLIC_STATIC_FILES / NO_CODEX_API / NO_TOKEN`
 
 M1 implementation: `NOT_AUTHORIZED`
 

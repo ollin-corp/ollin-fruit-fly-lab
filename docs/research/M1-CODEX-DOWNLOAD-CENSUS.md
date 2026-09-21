@@ -1,41 +1,62 @@
-# M1 Codex Download Census — 2026-09-21
+# M1 Public Static Data Census — R02
 
-Purpose: record what is externally supported before implementing M1.
+Freeze date: 2026-09-21.
 
-## Official Codex observations
+## Result
+
+M1 does not need a live Codex API.
+
+M1 does not need a Codex API token.
+
+M1 does not need a CAVE token.
+
+The direct acquisition design uses plain public static FAFB snapshot objects and becomes offline after acquisition.
+
+## FlyWire release identity
+
+FlyWire public release guidance identifies:
+
+- dataset: FAFB / Female Adult Fly Brain;
+- latest public release: v783;
+- release snapshot: October 2023;
+- public-release license: CC BY-NC 4.0.
+
+Source:
+
+`https://home.flywire.ai/guidelines`
+
+## Codex documentation — reference only
+
+The current Codex FAQ confirms:
+
+- FAFB v783 is the latest public FAFB snapshot;
+- Codex serves static connectome snapshots for analysis;
+- bulk analysis should use static downloadable files rather than repeated live queries;
+- Codex's programmatic `download_resource` route requires a Codex API token.
+
+R02 deliberately does not use that programmatic route.
 
 Source:
 
 `https://codex.flywire.ai/faq`
 
-Observed:
+Codex is therefore treated as:
 
-- FAFB current public/default snapshot is v783.
-- Codex serves static connectome snapshots intended for analysis.
-- Codex recommends static downloadable files for bulk/programmatic analysis instead of repeated live app queries.
-- The documented resource pattern is:
-  `/api/download_resource?data_product=...&dataset=fafb&api_token=...`
-- Codex's example explicitly uses `consolidated_cell_types` and `connections_princeton`.
-- A Codex API token is obtained from the signed-in account page.
+- optional human explorer;
+- metadata cross-check;
+- documentation source.
 
-Source:
+It is not an M1 runtime dependency.
 
-`https://codex.flywire.ai/api/download?dataset=fafb`
+## Public static object convention
 
-Observed public dataset identity:
+The current open-source Codex loader declares:
 
-- FAFB v783
-- Female Adult Fly Brain
-- 139,255 neurons
-- 3,732,460 aggregate displayed connections
+```text
+https://storage.googleapis.com/flywire-data/codex/data/fafb/{version}/{filename}
+```
 
-## Codex source-code observations
-
-Repository:
-
-`https://github.com/murthylab/codex`
-
-Current code inspected during proposal work declares raw FAFB data file names including:
+and directly names FAFB raw files including:
 
 - `neurons.csv.gz`
 - `classification.csv.gz`
@@ -47,26 +68,45 @@ Current code inspected during proposal work declares raw FAFB data file names in
 - `nblast.csv.gz`
 - `connectivity_tags.csv.gz`
 
-Codex source code also contains a Google Cloud Storage template for snapshot-specific raw data, but M1 does not treat an internal bucket path as the primary acquisition contract because the current public FAQ directs programmatic users through the download product interface.
+Source code:
 
-## Connectivity preservation decision
+`https://github.com/murthylab/codex/blob/main/codex/data/local_data_loader.py`
 
-M1 prefers the unthresholded Princeton connectivity product if exposed by the current portal.
+Observed source blob during R02 research:
 
-Reason:
+`85144aca4bc9928101aefbc4fdc9247303bdc65f`
 
-A source-preserving acquisition milestone should not discard weak edges before M2/M3 can make explicit analytical threshold choices.
+The static object convention is the initial M1 transport contract.
 
-No substitution from unthresholded to thresholded connectivity is allowed silently.
+## Connectivity completeness requirement
 
-## License
+The ordinary Codex graph interface applies dataset-specific minimum connection thresholds; the current FAQ documents FAFB graph connectivity at a default minimum of 5 synapses.
 
-FlyWire's public-release guidance states that public release data is made available under `CC BY-NC 4.0`.
+Because ŌLLIN Fruit Fly Lab intends to preserve source topology before making analytical choices, M1 requires an explicitly unthresholded connectivity artifact.
 
-M1 will store license/citation metadata in provenance and will not relicense source data.
+Candidate public static filenames to probe:
 
-## Important distinction
+- `connections_princeton_no_threshold.csv.gz`
+- `connections_no_threshold.csv.gz`
 
-Codex displayed connection count and raw downloadable connectivity row/synapse counts are not assumed to be the same quantity.
+R02 does not assume either candidate exists until implementation performs bounded static-object existence checks.
 
-M1 records source files exactly; interpretation belongs to later milestones.
+If neither exists under the pinned public snapshot location, implementation stops for owner review rather than silently accepting a thresholded graph.
+
+## Why the path still contains the word "codex"
+
+The current public object location used by the FlyWire/Codex project includes the path segment:
+
+`/codex/data/fafb/783/`
+
+That path name is storage organization only.
+
+ŌLLIN Fruit Fly Lab does not call the Codex application, does not use its live-query API, and does not require Codex authentication after this revision.
+
+## Data/model boundary
+
+Static source bytes remain external scientific evidence.
+
+M1 only acquires, validates, hashes, and manifests them.
+
+Interpretation, graph construction, dynamics, learning, and behavior remain later milestones.

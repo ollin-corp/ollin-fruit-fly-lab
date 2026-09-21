@@ -1,24 +1,27 @@
-# M1-WO001 DRAFT — FAFB v783 Deterministic Acquisition
+# M1-WO001 DRAFT R02 — Direct FAFB v783 Acquisition
 
 Status: `DRAFT / NOT_AUTHORIZED`
 
 Proposal authority:
 
-`.ollin/milestones/M1-PROPOSAL-R01.md`
+`.ollin/milestones/M1-PROPOSAL-R02.md`
 
 ## Baseline lock
 
-Implementation branch MUST be created from the exact then-current accepted `main` only after owner acceptance.
+Implementation MUST begin from the exact then-current accepted `main` after owner acceptance.
 
-At proposal time:
+Proposal-time main:
 
-`main = a49992dc425d01e71644ab92ebee66f11e7f1d45`
+`a49992dc425d01e71644ab92ebee66f11e7f1d45`
 
-Before implementation, re-read `main` SHA and tree and fail closed on drift.
+Before any implementation write:
 
-## Allowed writes
+1. re-read remote `main` SHA;
+2. re-read remote `main` tree;
+3. compare against owner-authorized baseline;
+4. fail closed on drift.
 
-Expected bounded implementation writes:
+## Allowed repository writes
 
 - `src/ollin_flylab/acquisition/**`
 - `tests/unit/**`
@@ -34,9 +37,9 @@ Expected bounded implementation writes:
 - `.ollin/work-orders/M1-WO001.md`
 - `.gitignore`
 - `CHANGELOG.md`
-- `README.md` if command documentation must be added.
+- `README.md` if local command documentation is required.
 
-No other source area is authorized.
+No other implementation area is authorized.
 
 ## Runtime writes
 
@@ -44,59 +47,105 @@ Runtime data may only be written beneath:
 
 `.data/fafb/v783/**`
 
-Runtime data MUST remain ignored by Git.
+These bytes MUST remain outside Git.
+
+## Network boundary
+
+Permitted network purpose:
+
+- direct acquisition or existence-check of explicitly constructed public FAFB v783 static objects.
+
+Initial permitted host:
+
+`storage.googleapis.com`
+
+Initial permitted path prefix:
+
+`/flywire-data/codex/data/fafb/783/`
+
+Prohibited:
+
+- Codex query API;
+- Codex download-resource API;
+- CAVE;
+- Google sign-in automation;
+- credential/token handling;
+- HTML scraping;
+- arbitrary URL fetching.
+
+## Candidate static files
+
+Required metadata:
+
+- `neurons.csv.gz`
+- `classification.csv.gz`
+- `consolidated_cell_types.csv.gz`
+
+Required connectivity semantics:
+
+- an unthresholded connectivity table.
+
+Probe candidates in this order:
+
+1. `connections_princeton_no_threshold.csv.gz`
+2. `connections_no_threshold.csv.gz`
+
+Do not silently fall back to `connections.csv.gz`.
 
 ## Intended public surfaces
 
-Implementation should remain small and prefer standard-library Python.
+Prefer standard-library Python.
 
-Expected conceptual surfaces:
+Conceptual surfaces:
 
 ```text
-discover_fafb_products(...)
-acquire_product(...)
+StaticArtifactSpec
+probe_static_artifact(...)
+acquire_static_artifact(...)
 verify_artifact(...)
 build_manifest(...)
 verify_manifest(...)
 ```
 
-Names may change during implementation if necessary, but responsibilities must remain bounded.
-
-## Secret input
-
-Preferred environment variable:
-
-`OLLIN_FLYLAB_CODEX_API_TOKEN`
-
-The implementation must redact query parameters named `api_token`, `token`, or equivalent before logging or manifest persistence.
+Exact names may change if tests demonstrate a better bounded design.
 
 ## Real-data execution
 
-The repository tests MUST NOT require network access or a real token.
+Repository unit/qualification tests MUST NOT download the real brain dataset.
 
-Real FAFB acquisition is a qualification action initiated locally by the owner.
+Real acquisition is an explicit owner-local qualification action.
 
-The M1 qualification harness may provide two phases:
+Implementation should expose:
 
-1. deterministic offline qualification;
-2. explicitly invoked real-source acquisition qualification.
+1. offline/synthetic qualification;
+2. static-source probe;
+3. explicit real acquisition;
+4. offline real-data re-validation.
 
 ## Stop conditions
 
 Fail closed on:
 
 - baseline mismatch;
-- unknown dataset/version;
-- missing required product;
-- token missing when the source endpoint requires one;
-- HTTP/non-data error body;
+- source URL outside allowlist;
+- redirect outside allowlist;
+- required unthresholded connectivity file unavailable;
+- HTTP error body;
+- zero-length response;
 - invalid gzip;
-- missing required CSV identity columns;
-- file hash mismatch;
-- attempted overwrite of accepted bytes;
-- secret leakage detection;
-- Git tracking of runtime source data.
+- missing minimum source columns;
+- hash mismatch;
+- attempted overwrite of accepted different bytes;
+- runtime data tracked by Git;
+- any credential/token requirement introduced by implementation.
 
 ## Completion condition
 
-M1-WO001 is complete only after the real FAFB v783 core bundle exists locally and the generated manifest can be re-validated offline with all hashes PASS.
+M1-WO001 is complete only when:
+
+1. the real FAFB v783 required bundle is present locally;
+2. the connectivity artifact is explicitly unthresholded;
+3. all accepted bytes are SHA-256 bound;
+4. the manifest validates deterministically;
+5. the entire accepted bundle re-validates offline;
+6. M0 qualification still passes.
