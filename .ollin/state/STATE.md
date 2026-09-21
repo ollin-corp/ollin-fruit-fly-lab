@@ -1,11 +1,21 @@
 # Accepted State
 
-Current milestone candidate: `M0`
+Current accepted milestone: `M0`
 
-Implementation status: `M0_QUALIFIED_PASS`
+Milestone status: `ACCEPTED_CLOSED`
+
+Accepted baseline SHA: `a99aefcaa4f667d47fd4a9a3ac2e750824139974`
+
+Accepted baseline tree: `8f48f2d3cfd0b4ee54c1b48c5cbe88c0c897b02d`
 
 GitHub publication status: `M0_BASELINE_PUBLISHED`
 
-Owner acceptance status: `PENDING_OWNER_LOCAL_REQUALIFICATION`
+Owner local requalification status: `PASS`
 
-No later milestone is authorized by this file.
+Evidence: `.ollin/evidence/M0-LOCAL-QUALIFICATION-20260921.md`
+
+Next milestone: `M1 — Deterministic Connectome Acquisition`
+
+M1 implementation status: `NOT_AUTHORIZED`
+
+Closing M0 does not authorize implementation of any later milestone.

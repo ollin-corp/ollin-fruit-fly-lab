@@ -9,3 +9,7 @@
 - Provenance and model-separation law.
 - M0 qualification harness.
 - Initial scientific source registry and architecture notes.
+- M0 local qualification evidence.
+
+### Changed
+- M0 closed after exact-SHA owner local requalification PASS.
