@@ -1,0 +1,16 @@
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
+venv/
+dist/
+build/
+*.egg-info/
+.coverage
+htmlcov/
+
+# Local scientific data and generated experiment output are never committed by default.
+.data/
+data/
+artifacts/
+runs/
